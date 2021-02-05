@@ -32,3 +32,27 @@ class WekanApi:
     def get_user_boards(self, filter=''):
         boards_data = self.api_call("/api/users/{}/boards".format(self.user_id))
         return [Board(self, board_data) for board_data in boards_data if filter in board_data["title"]]
+
+    def new_user_board(
+        self,
+        title,
+        # isAdmin=False,
+        # isActive=False,
+        # isNoComments=False,
+        # isCommentOnly=False,
+        permission="private",
+        # color="BELIZE",
+    ):
+        # TODO: Commented kwargs are specified in https://wekan.github.io/api/v4.92/#new_board
+        # However, they result in a <200> response with no board creation (wekan v4.70.0)
+        data = {
+            "title": title,
+            "owner": self.user_id,
+            # "isAdmin": isAdmin,
+            # "isActive": isActive,
+            # "isNoComments": isNoComments,
+            # "isCommentOnly": isCommentOnly,
+            "permission": permission,
+            # "color": color,
+        }
+        self.api_call("/api/boards", data=data)
