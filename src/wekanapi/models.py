@@ -15,6 +15,20 @@ class Board:
         swimlanes_data = self.api.api_call("/api/boards/{}/swimlanes".format(self.id))
         return [Swimlane(self.api, self, swimlane_data) for swimlane_data in swimlanes_data if filter in swimlane_data["title"]]
 
+    def new_cardslist(self, title):
+        # TODO: API should allow list to be added to a specific swimlane
+        # https://wekan.github.io/api/v4.92/#new_list has no method for this, however
+        cardslist_data = self.api.api_call("/api/boards/{}/lists".format(self.id), data={"title": title})
+        # TODO: Cardslist creation does not return title as query does.
+        cardslist_data.update({"title": title})
+        return Cardslist(self.api, self, cardslist_data)
+
+    def new_swimlane(self, title):
+        swimlanes_data = self.api.api_call("/api/boards/{}/swimlanes".format(self.id), data={"title": title})
+        # TODO: Swimlane creation does not return title as query does.
+        swimlanes_data.update({"title": title})
+        return Swimlane(self.api, self, swimlanes_data)
+
     def pprint(self, indent=0):
         pprint = "{}- {}".format("  "*indent, self.title)
         for cardslist in self.get_cardslists():
