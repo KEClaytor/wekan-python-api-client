@@ -13,7 +13,7 @@ class Board:
 
     def get_swimlanes(self, filter=''):
         swimlanes_data = self.api.api_call("/api/boards/{}/swimlanes".format(self.id))
-        return [Swinlane(self.api, self, swimlane_data) for swimlane_data in swimlanes_data if filter in swimlane_data["title"]]
+        return [Swimlane(self.api, self, swimlane_data) for swimlane_data in swimlanes_data if filter in swimlane_data["title"]]
 
     def pprint(self, indent=0):
         pprint = "{}- {}".format("  "*indent, self.title)
@@ -22,7 +22,7 @@ class Board:
         return pprint
 
 
-class Swinlane:
+class Swimlane:
     def __init__(self, api, board, swimlane_data):
         self.api = api
         self.board = board
